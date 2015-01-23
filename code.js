@@ -1,9 +1,18 @@
 {
     init: function(elevators, floors) {
+		// helper global variables
+		var lastElevatorUsed = 0;
+
 		// helper functions
 		sendOneElevatorTo = function(floor) {
-			// TODO: for now, always send the first elevator
-			sendElevatorTo(elevators[0],floor);
+			// TODO: if there's already an elevator scheduled there, ditch this
+			// TODO: round robin? seriously?
+			if (lastElevatorUsed == elevators.length-1) {
+				lastElevatorUsed = 0;
+			} else {
+				++lastElevatorUsed;
+			}
+			sendElevatorTo(elevators[lastElevatorUsed],floor);
 		}
 
 		sendElevatorTo = function(elevator, floor) {
