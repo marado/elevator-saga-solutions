@@ -5,7 +5,11 @@
 
 		// helper functions
 		sendOneElevatorTo = function(floor) {
-			// TODO: if there's already an elevator scheduled there, ditch this
+			// if there's already an elevator scheduled there, ditch this
+			for (var e = 0; e < elevators.length; e++) {
+				if (elevators[e].destinationQueue.indexOf(floor) != 1) return;
+			}
+
 			// TODO: round robin? seriously?
 			if (lastElevatorUsed == elevators.length-1) {
 				lastElevatorUsed = 0;
@@ -26,6 +30,8 @@
 		for (var e = 0; e < elevators.length; e++) {
         	var elevator = elevators[e];
         	elevator.on("idle", function() {
+				// TODO: we should send to where are people waiting
+				sendElevatorTo(this,0);
 	       	});
 			elevator.on("floor_button_pressed", function(floor) {
 				sendElevatorTo(this,floor);
