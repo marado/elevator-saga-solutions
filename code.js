@@ -8,7 +8,7 @@
 		sendOneElevatorTo = function(floor) {
 			// if there's already an elevator scheduled there, ditch this
 			for (var e = 0; e < elevators.length; e++) {
-				if (elevators[e].destinationQueue.indexOf(floor) != 1) return;
+				if (elevators[e].destinationQueue.indexOf(floor) != -1) return;
 			}
 
 			// TODO: round robin? seriously?
