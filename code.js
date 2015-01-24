@@ -7,21 +7,41 @@
 
 		// helper functions
 		sendOneElevatorTo = function(floor) {
+			var cargo = 1; var emptier = [0];
 			// if there's already an elevator scheduled there, ditch this
 			for (var e = 0; e < elevators.length; e++) {
 				if (elevators[e].destinationQueue.indexOf(floor) != -1) {
-					lastCall.push(floor);
+					lastCalls.push(floor);
 					return;
+				}
+				if (elevators[e].loadFactor() < cargo) {
+					cargo = elevators[e].loadFactor();
+					emptier = [e];
+				} else if (elevators[e].loadFactor() == cargo) {
+					emptier.push(e);
 				}
 			}
 
-			// TODO: round robin? seriously?
-			if (lastElevatorUsed == elevators.length-1) {
-				lastElevatorUsed = 0;
-			} else {
-				++lastElevatorUsed;
+			var result = 0;
+			if (emptier.length == 1) { 
+                result = emptier.pop(); 
+            }
+			else {
+                // who has nothing better to do?
+                var shortestQueue = 0; var qlength = 100;
+                for (var p = 0; p < emptier.length; p++) {
+                    var l = elevators[emptier[p]].destinationQueue.length;
+                    if (l<qlength) {
+                        l = qlength;
+                        shortestQueue = p;
+                    }
+                }
+                result=emptier[shortestQueue];
 			}
-			sendElevatorTo(elevators[lastElevatorUsed],floor);
+
+			// emptier
+			sendElevatorTo(elevators[result],floor);
+
 		}
 
 		sendElevatorTo = function(elevator, floor) {
