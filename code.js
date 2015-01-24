@@ -2,6 +2,7 @@
     init: function(elevators, floors) {
 		// helper global variables
 		var lastElevatorUsed = 0;
+		var powersaving = true;
 
 		// helper functions
 		sendOneElevatorTo = function(floor) {
@@ -27,7 +28,9 @@
 		}
 
 		// elevator events
-		for (var e = 0; e < elevators.length; e++) {
+		var functioningElevators = elevators.length;
+		if (powersaving) functioningElevators = 1;
+		for (var e = 0; e < functioningElevators; e++) {
         	var elevator = elevators[e];
         	elevator.on("idle", function() {
 				// TODO: we should send to where are people waiting
