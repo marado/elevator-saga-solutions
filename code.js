@@ -2,13 +2,17 @@
     init: function(elevators, floors) {
 		// helper global variables
 		var lastElevatorUsed = 0;
-		var powersaving = true;
+		var powersaving = false;
+        var lastCalls = [];
 
 		// helper functions
 		sendOneElevatorTo = function(floor) {
 			// if there's already an elevator scheduled there, ditch this
 			for (var e = 0; e < elevators.length; e++) {
-				if (elevators[e].destinationQueue.indexOf(floor) != -1) return;
+				if (elevators[e].destinationQueue.indexOf(floor) != -1) {
+					lastCall.push(floor);
+					return;
+				}
 			}
 
 			// TODO: round robin? seriously?
@@ -21,6 +25,7 @@
 		}
 
 		sendElevatorTo = function(elevator, floor) {
+			if (typeof(floor) == 'undefined') return;
 			// if this elevator is already scheduled there, don't add to the queue
 			if (elevator.destinationQueue.indexOf(floor) != -1) return;
 
@@ -34,7 +39,7 @@
         	var elevator = elevators[e];
         	elevator.on("idle", function() {
 				// TODO: we should send to where are people waiting
-				sendElevatorTo(this,0);
+				sendElevatorTo(this,lastCalls.pop());
 	       	});
 			elevator.on("floor_button_pressed", function(floor) {
 				sendElevatorTo(this,floor);
